@@ -6,8 +6,9 @@ import LocationInfoBox from "../LocationInfoBox";
 const Map = ({ eventData, center, zoom }) => {
   const [locationInfo, setLocationInfo] = useState(null);
 
+  //This variable "markers" will be an array of LocationMarker components. The markers will go in the GoogleMapReact component that is returned here. (the map)
   const markers = eventData.map((ev) => {
-    //check to see if the event is of the wildfire category and then create a location marker component with each event's coordinates
+    //Check to see if the event data is of the wildfire category and then create a location marker component with each event's coordinates
     if (ev.categories[0].id === 8) {
       return (
         <LocationMarker
@@ -19,7 +20,6 @@ const Map = ({ eventData, center, zoom }) => {
     }
     return null;
   });
-  console.log(process.env.NEXT_PUBLIC_GOOGLE_API_KEY);
   return (
     <div className="map">
       <GoogleMapReact
