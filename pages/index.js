@@ -1,65 +1,37 @@
-import Head from 'next/head'
-import styles from '../styles/Home.module.css'
+import { useState, useEffect } from "react";
+import Map from "../components/Map";
+import Loader from "../components/Loader";
+import Header from "../components/Header";
 
-export default function Home() {
+function MyApp() {
+  const [eventData, setEventData] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    //fetchEvents is an asynchronous function using async/await that fetches the events at the nasa api (all of the fire coordinates and any other similar data)
+    const fetchEvents = async () => {
+      //set loading to true while data is being fetched
+      setLoading(true);
+
+      const res = await fetch(
+        "https://eonet.sci.gsfc.nasa.gov/api/v2.1/events"
+      );
+      const { events } = await res.json();
+
+      setEventData(events);
+      setLoading(false);
+    };
+
+    fetchEvents();
+  }, []);
+
   return (
-    <div className={styles.container}>
-      <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+    <div>
+      <Header />
 
-      <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
-
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.js</code>
-        </p>
-
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/master/examples"
-            className={styles.card}
-          >
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h3>Deploy &rarr;</h3>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div>
-      </main>
-
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel Logo" className={styles.logo} />
-        </a>
-      </footer>
+      {!loading ? <Map eventData={eventData} /> : <Loader />}
     </div>
-  )
+  );
 }
+
+export default MyApp;
