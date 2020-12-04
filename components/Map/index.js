@@ -19,7 +19,7 @@ const Map = ({ eventData, center, zoom }) => {
     }
     return null;
   });
-
+  console.log(process.env.GOOGLE_API_KEY);
   return (
     <div className="map">
       <GoogleMapReact
